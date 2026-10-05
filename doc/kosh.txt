@@ -1,0 +1,87 @@
+*kosh.txt*  Koshka language server for Neovim
+
+==============================================================================
+CONTENTS                                                       *kosh-contents*
+
+  1. Introduction .......................................... |kosh-intro|
+  2. Setup ................................................. |kosh-setup|
+  3. Options ............................................... |kosh-options|
+  4. Filetypes ............................................. |kosh-filetype-list|
+  5. Formatting without the server ......................... |kosh-format|
+
+==============================================================================
+1. INTRODUCTION                                                   *kosh-intro*
+
+kosh.nvim starts the Koshka language server, `kosh --as-language-server`, for
+shell scripts and for files that embed shell. The server reports diagnostics
+and provides completion, hover, outline, rename, and formatting.
+
+The plugin requires Neovim 0.11 or newer and a `kosh` executable on $PATH.
+On an older Neovim, |kosh.setup()| reports an error and does nothing.
+
+==============================================================================
+2. SETUP                                                          *kosh-setup*
+
+                                                                *kosh.setup()*
+kosh.setup({opts})
+    Registers the `kosh` and `shit` filetypes, reuses the `bash` tree-sitter
+    parser for `sh`, `bash`, `kosh`, and `shit` buffers, and enables the
+    `kosh` LSP configuration from `lsp/kosh.lua`.
+
+    With lazy.nvim: >lua
+        { "fennec-support/kosh.nvim", lazy = false, opts = {} }
+<
+    Keep `lazy = false`. With `ft` loading, a `.kosh` buffer opened first
+    never receives the `kosh` filetype, so the server never starts.
+
+==============================================================================
+3. OPTIONS                                                      *kosh-options*
+
+format_on_save                                         *kosh-format_on_save*
+    Boolean, default `true`. Formats the buffer with the server before each
+    write. Set it to `false` and call |vim.lsp.buf.format()| to format on
+    demand.
+
+filetypes                                                   *kosh-filetypes*
+    List of strings, default `nil`. When set, replaces the filetypes the
+    server attaches to.
+
+==============================================================================
+4. FILETYPES                                            *kosh-filetype-list*
+
+By default the server attaches to: `sh`, `bash`, `kosh`, `shit`, `yaml`,
+`yaml.ansible`, `markdown`, `dockerfile`, `make`, `json`, `jsonc`, `just`,
+and `spec`.
+
+A buffer named `foo.just` is a justfile to Neovim but an ordinary shell script
+to the server. The server attaches only to `justfile` and `.justfile` buffers
+among `just` buffers.
+
+If bashls runs on the same buffers, each problem is reported twice.
+
+==============================================================================
+5. FORMATTING WITHOUT THE SERVER                                 *kosh-format*
+
+`kosh --format` reads standard input and writes the formatted script. Standard
+input carries no file name, so it reads every buffer as shell. Use it only for
+shell filetypes, and never together with the server. With conform.nvim: >lua
+    require("conform").setup({
+      formatters = {
+        kosh = {
+          command = "kosh",
+          args = { "--format" },
+          stdin = true,
+          exit_codes = { 0 },
+          env = { NO_COLOR = "1" },
+        },
+      },
+      formatters_by_ft = {
+        sh = { "kosh" },
+        bash = { "kosh" },
+        kosh = { "kosh" },
+        shit = { "kosh" },
+      },
+      format_on_save = { timeout_ms = 2000, lsp_format = "never" },
+    })
+<
+ vim:tw=78:ts=8:ft=help:norl:

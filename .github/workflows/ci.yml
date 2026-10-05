@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  style:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: JohnnyMorganz/stylua-action@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          version: latest
+          args: --check .
+
+  attach:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Neovim
+        run: |
+          gh release download stable -R neovim/neovim -p nvim-linux-x86_64.tar.gz -D "$RUNNER_TEMP"
+          tar -xzf "$RUNNER_TEMP/nvim-linux-x86_64.tar.gz" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/nvim-linux-x86_64/bin" >> "$GITHUB_PATH"
+
+      - name: Install kosh
+        run: |
+          mkdir -p "$RUNNER_TEMP/bin"
+          gh release download -R fennec-support/kosh -p 'kosh-linux-amd64-*' -O "$RUNNER_TEMP/bin/kosh"
+          chmod +x "$RUNNER_TEMP/bin/kosh"
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+
+      - name: Check the help tags
+        run: nvim --headless --clean -c 'try | helptags doc | catch | cquit 1 | endtry' -c 'qall'
+
+      - name: Check that the client attaches
+        run: |
+          nvim --version | head -1
+          kosh -c 'echo kosh is on PATH'
+          timeout 60 nvim --headless --clean -c "luafile tests/attach.lua"
