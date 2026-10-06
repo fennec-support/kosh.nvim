@@ -8,7 +8,7 @@ Currently that includes:
 - LSP/Symbols
 - Formatter
 
-## Installation
+### Installation
 
 Make sure you have:
 - `kosh` on `PATH`. See the
@@ -20,23 +20,19 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim):
 { "fennec-support/kosh.nvim", lazy = false, opts = {} }
 ```
 
-## Options
+Don't forget to disable `bashls`.
 
-The defaults:
+### Options
+
+Defaults:
 ```lua
 require("kosh").setup({
-  -- Format the buffer with the server before each write.
   format_on_save = false,
-  -- Filetypes appended to the built-in list: sh, bash, kosh, shit, yaml,
-  -- yaml.ansible, markdown, dockerfile, make, json, jsonc, just, and spec.
+  -- Filetypes appended to the built-in list.
   additional_filetypes = {},
 })
 ```
 
-## Documentation
+### Documentation
 
 [RTFM](doc/kosh.txt).
-
-## bashls
-
-Just disable it.
