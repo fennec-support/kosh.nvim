@@ -38,13 +38,12 @@ kosh.setup({opts})
 3. OPTIONS                                                      *kosh-options*
 
 format_on_save                                         *kosh-format_on_save*
-    Boolean, default `true`. Formats the buffer with the server before each
-    write. Set it to `false` and call |vim.lsp.buf.format()| to format on
-    demand.
+    Boolean, default `false`. Formats the buffer with the server before each
+    write. Without it, call |vim.lsp.buf.format()| to format on demand.
 
-filetypes                                                   *kosh-filetypes*
-    List of strings, default `nil`. When set, replaces the filetypes the
-    server attaches to.
+additional_filetypes                             *kosh-additional_filetypes*
+    List of strings, default `{}`. Appends filetypes to the list in
+    |kosh-filetype-list|. The built-in filetypes always stay.
 
 ==============================================================================
 4. FILETYPES                                            *kosh-filetype-list*

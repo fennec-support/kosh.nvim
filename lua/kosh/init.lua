@@ -1,12 +1,54 @@
--- Sets up Koshka's language server and format-on-save in Neovim 0.11+. The
--- server configuration itself lives in lsp/kosh.lua.
+-- Copyright 2026 toiletbril
+--
+-- Redistribution and use in source and binary forms, with or without
+-- modification, are permitted provided that the following conditions are met:
+--
+-- 1. Redistributions of source code must retain the above copyright notice,
+-- this list of conditions and the following disclaimer.
+--
+-- 2. Redistributions in binary form must reproduce the above copyright notice,
+-- this list of conditions and the following disclaimer in the documentation
+-- and/or other materials provided with the distribution.
+--
+-- 3. Neither the name of the copyright holder nor the names of its
+-- contributors may be used to endorse or promote products derived from this
+-- software without specific prior written permission.
+--
+-- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS”
+-- AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+-- IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+-- ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+-- LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+-- CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+-- SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+-- INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+-- CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+-- ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+-- POSSIBILITY OF SUCH DAMAGE.
 
 local M = {}
 
 local defaults = {
-  format_on_save = true,
-  filetypes = nil,
+  format_on_save = false,
+  additional_filetypes = {},
 }
+
+local function append_filetypes(additional_filetypes)
+  local filetypes = vim.deepcopy(vim.lsp.config.kosh.filetypes)
+  local seen = {}
+  for _, filetype in ipairs(filetypes) do
+    seen[filetype] = true
+  end
+
+  for _, filetype in ipairs(additional_filetypes) do
+    if not seen[filetype] then
+      seen[filetype] = true
+      table.insert(filetypes, filetype)
+    end
+  end
+
+  vim.lsp.config("kosh", { filetypes = filetypes })
+end
 
 local function register_filetypes()
   vim.filetype.add({
@@ -59,8 +101,8 @@ function M.setup(opts)
 
   register_filetypes()
 
-  if opts.filetypes ~= nil then
-    vim.lsp.config("kosh", { filetypes = opts.filetypes })
+  if #opts.additional_filetypes > 0 then
+    append_filetypes(opts.additional_filetypes)
   end
 
   vim.lsp.enable("kosh")
