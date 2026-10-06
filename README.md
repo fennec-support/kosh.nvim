@@ -1,8 +1,8 @@
 # kosh.nvim
 
-Neovim 0.11+ support for [Koshka](https://github.com/fennec-support/kosh): its
-language server gives shell diagnostics, completion, hover, rename, and
-formatting.
+This plugin runs the [Koshka](https://github.com/fennec-support/kosh) language
+server in Neovim 0.11 and newer. The server provides shell diagnostics,
+completion, hover, rename, and formatting.
 
 ## Requirements
 
@@ -20,9 +20,9 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim):
 { "fennec-support/kosh.nvim", lazy = false, opts = {} }
 ```
 
-`lazy = false` is required. With `ft` loading, a `.kosh` buffer opened first
-never receives the `kosh` filetype, because the plugin that registers that
-filetype has not loaded yet. The server then never starts.
+Keep `lazy = false`. With `ft` loading, a `.kosh` buffer opened first never gets
+the `kosh` filetype, because the plugin that registers it has not loaded yet,
+and the server never starts.
 
 Without a plugin manager, add the repository to `runtimepath` and call:
 
@@ -51,8 +51,8 @@ server, so the server only attaches to `justfile` and `.justfile` buffers.
 
 ## bashls
 
-If bashls also runs on the same buffers, every problem is reported twice.
-Disable one of them for shell filetypes.
+If bashls also runs on the same buffers, you see every problem twice. Disable
+one of the two servers for shell filetypes.
 
 ## Without the language server
 

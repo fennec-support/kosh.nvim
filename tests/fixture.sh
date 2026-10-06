@@ -1,3 +1,5 @@
 #!/bin/sh
-name=world
-echo "hello $name"
+
+NAME=world
+
+echo "hello $NAME"
