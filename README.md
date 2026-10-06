@@ -8,6 +8,10 @@ Currently that includes:
 - LSP/Symbols
 - Formatter
 
+| kosh lsp in action. |
+| - |
+| <img src="assets/screenshot.png" width=99% /> |
+
 ### Installation
 
 Make sure you have:
