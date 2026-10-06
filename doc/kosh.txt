@@ -4,6 +4,7 @@
 CONTENTS                                                       *kosh-contents*
 
   1. Introduction .......................................... |kosh-intro|
+     Health check .......................................... |kosh-health|
   2. Setup ................................................. |kosh-setup|
   3. Options ............................................... |kosh-options|
   4. Filetypes ............................................. |kosh-filetype-list|
@@ -17,7 +18,13 @@ shell scripts and for files that embed shell. The server reports diagnostics
 and provides completion, hover, outline, rename, and formatting.
 
 The plugin requires Neovim 0.11 or newer and a `kosh` executable on $PATH.
-On an older Neovim, |kosh.setup()| reports an error and does nothing.
+It does not download or install `kosh`. On an older Neovim, |kosh.setup()|
+reports an error and does nothing.
+
+                                                                 *kosh-health*
+Run `:checkhealth kosh` to check the Neovim version, the `kosh` executable
+and its version, and whether the `kosh` LSP configuration is registered and
+enabled.
 
 ==============================================================================
 2. SETUP                                                          *kosh-setup*
