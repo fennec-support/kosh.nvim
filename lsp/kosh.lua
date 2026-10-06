@@ -28,7 +28,6 @@
 
 -- Koshka's language server for Neovim 0.11+.
 
-
 local function is_analyzable_buffer(bufnr)
   if vim.bo[bufnr].filetype ~= "just" then
     return true
